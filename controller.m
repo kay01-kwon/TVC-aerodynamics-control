@@ -41,12 +41,13 @@ T = -sqrt(u'*u);
     if abs(T) > T_upper
         T = -T_upper;
     end    
-
-phi_s = -asin(z_(2))
+phi_s = asin(IRB(3,2));
+% phi_s = -asin(z_(2))
 phi = phi_eq + 0.5*( -phi_s - phi_eq) - 0.1*s(7)
 phi_eq_deg = phi_eq*180/pi
 
-theta_s = atan2(z_(1)/cos(phi_s),z_(3)/cos(phi_s))
+theta_s = atan2(-IRB(3,1)/cos(phi_s),IRB(3,3)/cos(phi_s));
+% theta_s = atan2(z_(1)/cos(phi_s),z_(3)/cos(phi_s))
 theta = theta_eq + 0.5*( -theta_s - theta_eq ) - 0.1*s(8)
 
 theta_eq_deg = theta_eq*180/pi
