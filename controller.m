@@ -34,7 +34,7 @@ Kp = 100*eye(3);
 Kd = 70*eye(3);
 
 % Expressed in the inertial frame
-p(1) = 0; p(2) = 0; v(1) = 0; v(2) = 0;
+% p(1) = 0; p(2) = 0; v(1) = 0; v(2) = 0;
 u = [0;0;-m*g] - Kp*(p - ref(1:3)) - Kd*(v - ref(4:6));
 T = -sqrt(u'*u);
 
@@ -42,11 +42,13 @@ T = -sqrt(u'*u);
         T = -T_upper;
     end    
 phi_s = asin(IRB(3,2));
-phi = phi_eq + 0.5*( -phi_s - phi_eq) - 0.1*s(7)
+% phi_s = -asin(z_(2))
+phi = phi_eq + 0.5*( -phi_s - phi_eq) - 0.1*s(7) - 0.1*(p(2)-ref(2)) - 0.07*(v(2)-ref(2))
 phi_eq_deg = phi_eq*180/pi
 
 theta_s = atan2(-IRB(3,1)/cos(phi_s),IRB(3,3)/cos(phi_s));
-theta = theta_eq + 0.5*( -theta_s - theta_eq ) - 0.1*s(8)
+% theta_s = atan2(z_(1)/cos(phi_s),z_(3)/cos(phi_s))
+theta = theta_eq + 0.5*( -theta_s - theta_eq ) - 0.1*s(8) + 0.1*(p(1)-ref(1)) + 0.07*(v(1)-ref(1))
 
 theta_eq_deg = theta_eq*180/pi
 

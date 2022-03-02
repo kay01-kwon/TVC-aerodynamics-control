@@ -5,9 +5,9 @@ clc
 % Parameter set up
 global param;
 
-dx = -0.1;
-dy = 0.1;
-dz = -0.8;
+dx = -0.05;
+dy = 0.05;
+dz = -0.7;
 
 param.m = 40;
 param.Ixx = 1;
@@ -18,9 +18,9 @@ param.CoG_r_T = [dx;dy;dz];
 
 % Time 
 
-dt = 0.002;
-cdt = 0.01;
-T = 10;
+dt = 0.01;
+cdt = 0.05;
+T = 30;
 time = 0;
 
 % State initialization
@@ -60,7 +60,7 @@ while(time < T)
     xlim([0 T])
 
     subplot(2,3,3);
-    plot(time,s(:,6),'k')
+    plot(time,-s(:,6),'k')
     title('z - t')
     hold on
     grid on;
@@ -81,7 +81,7 @@ while(time < T)
     xlim([0 T])
 
     subplot(2,3,6);
-    plot(time,s(:,3),'k')
+    plot(time,-s(:,3),'k')
     title('v_z - t')
     hold on
     grid on;
