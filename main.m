@@ -5,13 +5,13 @@ clc
 % Parameter set up
 global param;
 
-dx = -0.05;
-dy = 0.05;
-dz = -0.7;
+dx = 0.010;
+dy = 0.020;
+dz = -1;
 
-param.m = 40;
-param.Ixx = 1;
-param.Iyy = 1;
+param.m = 60;
+param.Ixx = 1.7107;
+param.Iyy = 3.1276;
 param.Izz = 1;
 param.g = 9.81;
 param.CoG_r_T = [dx;dy;dz];

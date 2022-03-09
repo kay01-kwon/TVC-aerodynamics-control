@@ -36,9 +36,7 @@ dsdt(7:9) = I\(cross(CoG_r_T, EulerToRot(phi,theta)*T) - cross(w,I*w));
 dsdt(10:13) = 0.5*[cross(q_v,w) + qw*w;-q_v'*w;];
 
 if abs(Thrust) < abs(m*g) && s(6) > 0
-    dsdt(1:13) = zeros(1,13);
-    s(1:12) = zeros(1,12);
-    s(13) = 1;
-end
+    dsdt()
 
 end
+
