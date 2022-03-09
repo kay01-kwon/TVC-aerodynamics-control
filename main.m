@@ -29,6 +29,13 @@ s_init(13) = 1;
 
 state_save = [];
 time_save = [];
+control_time_save = [];
+
+phi_u_save = [];
+theta_u_save = [];
+
+theta_s_save = [];
+phi_s_save = [];
 
 T_input = -param.m*param.g;
 phi = -asin(-dy/sqrt(param.CoG_r_T'*param.CoG_r_T));
@@ -45,6 +52,18 @@ while(time < T)
     
     [time s] = ode45(@(t,s) plant_dynamics(t,s,T_input,phi,theta)',t,s_init);
     [T_input,phi,theta] = controller(s(end,:),ref);
+    
+    qx = s(end,10);
+    qy = s(end,11);
+    qz = s(end,12);
+    qw = s(end,13);
+    
+    q = [qx;qy;qz;qw];
+    
+    IRB = QuatToRot(q);
+    phi_s = asin(IRB(3,2));
+    theta_s = atan2(-IRB(3,1)/cos(phi_s),IRB(3,3)/cos(phi_s));
+    
     subplot(2,3,1);
     plot(time,s(:,4),'k')
     title('x - t')
@@ -95,5 +114,39 @@ while(time < T)
 
     time_save = [time_save; time];
     state_save = [state_save;s];
+    control_time_save = [control_time_save;time(end)];
+    
+    phi_u_save = [phi_u_save; phi];
+    theta_u_save = [theta_u_save; theta];
+    
+    phi_s_save = [phi_s_save; phi_s];
+    theta_s_save = [theta_s_save;theta_s];
 
 end
+
+%%%
+figure()
+subplot(2,2,1)
+plot(control_time_save,rad2deg(phi_u_save))
+title('\phi_{u} (deg) - time (s)')
+xlabel('time (s)')
+ylabel('\phi_{u} (deg)')
+
+subplot(2,2,2)
+plot(control_time_save,rad2deg(theta_u_save))
+title('\theta_{u} (deg) - time (s)')
+xlabel('time (s)')
+ylabel('\theta_{u} (deg)')
+
+subplot(2,2,3)
+plot(control_time_save,rad2deg(phi_s_save))
+title('\phi_{s} (deg) - time (s)')
+xlabel('time (s)')
+ylabel('\phi_{s} (deg)')
+
+subplot(2,2,4)
+plot(control_time_save,rad2deg(theta_s_save))
+title('\theta_{s} (deg) - time (s)')
+xlabel('time (s)')
+ylabel('\theta_{s} (deg)')
+

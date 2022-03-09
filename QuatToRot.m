@@ -12,4 +12,3 @@ q_xyz = q_v*q_v';
 
 RotM = qw^2*eye(3) + 2*qw*q_v_skiew + 2*q_xyz - q_v'*q_v*eye(3);
 end
-

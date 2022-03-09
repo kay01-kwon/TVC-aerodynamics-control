@@ -11,7 +11,6 @@ dz = -CoG_r_T(3);
 dx = 0;
 dy = 0;
 
-
 % Heading and upward
 x = [1;0;0];
 z = [0;0;1];
@@ -36,11 +35,11 @@ z_ = IRB*z
 x_ = IRB*x
 
 % Control Gain
-Kp = [100 0 0;
-    0 100 0;
-    0 0 100];
-Kd = [50 0 0;
+Kp = [50 0 0;
     0 50 0;
+    0 0 100];
+Kd = [30 0 0;
+    0 30 0;
     0 0 70];
 
 % Expressed in the inertial frame
@@ -72,10 +71,8 @@ phi_des = asin(u(2)/60/9.81) - phi_eq;
 theta_s = atan2(-IRB(3,1)/cos(phi_s),IRB(3,3)/cos(phi_s));
 theta_des =-asin(u(1)/60/9.81) - theta_eq;
 
-phi = phi_eq + 0.5*(phi_des-phi_s) - 0.1*s(7);
+phi = phi_eq + 0.2*(phi_des-phi_s) - 0.01*s(7);
 theta = theta_eq + 0.5*(theta_des-theta_s) - 0.1*s(8);
-
-
 
 threshold = 5;
 threshold_rad = deg2rad(threshold);
