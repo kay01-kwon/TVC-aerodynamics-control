@@ -8,8 +8,12 @@ CoG_r_T = param.CoG_r_T;
 dx = -CoG_r_T(1);
 dy = -CoG_r_T(2);
 dz = -CoG_r_T(3);
-dx = 0;
-dy = 0;
+
+
+L_ = [0;0;param.L];
+Ixx = param.Ixx;
+Iyy = param.Iyy;
+
 
 % Heading and upward
 x = [1;0;0];
@@ -31,26 +35,28 @@ q = [qx;qy;qz;qw];
 
 IRB = QuatToRot(q);
 
-z_ = IRB*z
-x_ = IRB*x
+z_ = IRB*z;
+x_ = IRB*x;
 
 % Control Gain
-Kp = [50 0 0;
-    0 50 0;
+Kp = [10 0 0;
+    0 10 0;
     0 0 100];
-Kd = [30 0 0;
-    0 30 0;
+Kd = [7 0 0;
+    0 7 0;
     0 0 70];
 
 % Expressed in the inertial frame
 u = [0;0;-m*g] - Kp*(p - ref(1:3)) - Kd*(v - ref(4:6));
 
-if abs(u(1)) > 100
-    u(1) = sign(u(1))*100;
+acc_threshold = 10;
+
+if abs(u(1)) > acc_threshold
+    u(1) = sign(u(1))*acc_threshold;
 end
 
-if abs(u(2)) > 100
-    u(2) = sign(u(2))*100;
+if abs(u(2)) > acc_threshold
+    u(2) = sign(u(2))*acc_threshold;
 end
 
 T = -sqrt(u'*u);
@@ -63,18 +69,19 @@ if abs(T) < T_lower
     T = -T_lower;
 end
 
-u
 
 phi_s = asin(IRB(3,2));
-phi_des = asin(u(2)/60/9.81) - phi_eq;
+phi_des = asin(u(2)/abs(T)) - phi_eq;
 
 theta_s = atan2(-IRB(3,1)/cos(phi_s),IRB(3,3)/cos(phi_s));
-theta_des =-asin(u(1)/60/9.81) - theta_eq;
+theta_des =-asin(u(1)/abs(T)) - theta_eq;
 
-phi = phi_eq + 0.2*(phi_des-phi_s) - 0.01*s(7);
-theta = theta_eq + 0.5*(theta_des-theta_s) - 0.1*s(8);
 
-threshold = 5;
+
+phi = phi_eq  + 0.5*(phi_des-phi_s) - 0.1*s(7);
+theta = theta_eq + 12/7*0.5*(theta_des-theta_s) - 0.1*12/7*s(8);
+
+threshold = 10;
 threshold_rad = deg2rad(threshold);
 
 if abs(phi) > threshold_rad
@@ -85,11 +92,11 @@ if abs(theta) > threshold_rad
     theta = sign(theta)*threshold_rad;
 end
 
-fprintf("Phi des: %f (deg) \t",phi_des*180/pi);
-fprintf("Theta des: %f (deg) \t",theta_des*180/pi);
-fprintf("Phi state: %f (deg)\t",rad2deg(phi_s));
-fprintf("Theta state: %f (deg)\n",rad2deg(theta_s));
+% fprintf("Phi des: %f (deg) \t",phi_des*180/pi);
+% fprintf("Theta des: %f (deg) \t",theta_des*180/pi);
+% fprintf("Phi state: %f (deg)\t",rad2deg(phi_s));
+% fprintf("Theta state: %f (deg)\n",rad2deg(theta_s));
 fprintf("Phi eq: %f (deg)",rad2deg(phi_eq));
 fprintf("Theta eq: %f (deg)\n",rad2deg(theta_eq));
-fprintf("Control Input - Phi_u : (deg)%f Theta_u : %f (deg)",rad2deg(phi),rad2deg(theta));
-fprintf("Thrust: %f \n",T);
+% fprintf("Control Input - Phi_u : (deg)%f Theta_u : %f (deg)",rad2deg(phi),rad2deg(theta));
+% fprintf("Thrust: %f \n",T);
